@@ -7,8 +7,15 @@ exports.about = function(req, res){
   res.render('index', { title: 'Something Else' });
 };
 
+const options = {
+  port: 6379,
+  host: process.env.REDIS_HOST || 'localhost',
+};
+
+console.log(`REDIS SETTINGS: ${JSON.stringify(options)}`);
+
 var redis = require("redis"),
-  client = redis.createClient();
+  client = redis.createClient(options);
 
 exports.todo = function(req, res){
  var anid= req.query['id'];
@@ -17,7 +24,7 @@ exports.todo = function(req, res){
   if(anid=="" || anid==undefined){
   anid="";
   oldText="";
-  console.log("if null callBack id is =>"+anid+" And text is =>"+oldText);	
+  console.log("if null callBack id is =>"+anid+" And text is =>"+oldText);
 
   callBackExe();
   }
@@ -27,7 +34,7 @@ exports.todo = function(req, res){
    callBackExe();
    });
   }
-  
+
   function callBackExe(){
   var todos = [];
    client.hgetall("Todo1", function(err, objs) {
@@ -38,7 +45,7 @@ exports.todo = function(req, res){
       };
       todos.push(newTodo);
     }
-console.log("callBack id is =>"+anid+" And text is =>"+oldText);	
+console.log("callBack id is =>"+anid+" And text is =>"+oldText);
     res.render('todo', {
       title: 'New Todo List',
       todos: todos,
@@ -47,7 +54,7 @@ console.log("callBack id is =>"+anid+" And text is =>"+oldText);
     });
   });
   }
- 
+
 };
 
 
@@ -65,17 +72,17 @@ exports.saveTodo = function(req, res) {
   else{
   newTodo.id = anid;
   }
- 
+
   client.hset("Todo1", newTodo.id, newTodo.name);
   res.redirect("/todo");
 };
 
 exports.removeTodo = function(req, res) {
  var anid= req.query['id'];
-  if(anid=="" || anid==undefined){  
+  if(anid=="" || anid==undefined){
   res.redirect("/todo");
   }
-  else{  
+  else{
   res.redirect("/todo");
    client.hdel("Todo1", anid);
   }
