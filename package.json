@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "express": "2.5.8",
+    "express": "3.11.0",
     "jade": ">= 0.0.1",
     "localStorage": "~1.0.0",
     "redis": "~0.7.2",
